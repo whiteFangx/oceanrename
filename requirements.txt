@@ -5,5 +5,5 @@ aiohttp
 psycopg2-binary
 pillow
 hachoir
-pymongo
+pymongo==4.3.3
 dnspython

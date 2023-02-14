@@ -23,7 +23,7 @@ async def progress_for_pyrogram(
 ):
     now = time.time()
     diff = now - start
-    
+
     # too early to update the progress
     if diff < 1:
         return
@@ -32,7 +32,7 @@ async def progress_for_pyrogram(
         raise StopTransmission()
 
     if round(diff % time_out) == 0 or current == total:
-    
+
         # if round(current / total * 100, 0) % 5 == 0:
         percentage = current * 100 / total
         elapsed_time = round(diff)
@@ -56,21 +56,9 @@ async def progress_for_pyrogram(
         )
         try:
             if not message.photo:
-                await message.edit_text(
-                    text="{}\n {}".format(
-                        ud_type,
-                        tmp
-                    ),
-                    reply_markup=markup
-                )
+                await message.edit_text(text=f"{ud_type}\n {tmp}", reply_markup=markup)
             else:
-                await message.edit_caption(
-                    caption="{}\n {}".format(
-                        ud_type,
-                        tmp
-                    ),
-                    reply_markup=markup
-                )
+                await message.edit_caption(caption=f"{ud_type}\n {tmp}", reply_markup=markup)
             await asyncio.sleep(1)
         except:
             pass

@@ -12,12 +12,11 @@ def human_readable_bytes(value: int, digits: int = 2, delim: str = "", postfix: 
         return None
     chosen_unit = "B"
     for unit in ("KiB", "MiB", "GiB", "TiB"):
-        if value > 1000:
-            value /= 1024
-            chosen_unit = unit
-        else:
+        if value <= 1000:
             break
-    return f"{value:.{digits}f}" + delim + chosen_unit + postfix
+        value /= 1024
+        chosen_unit = unit
+    return f"{value:.{digits}f}{delim}{chosen_unit}{postfix}"
 
 
 def human_readable_timedelta(seconds: int, precision: int = 0) -> str:
@@ -25,7 +24,7 @@ def human_readable_timedelta(seconds: int, precision: int = 0) -> str:
     """
     pieces = []
     value = timedelta(seconds=seconds)
-    
+
     if value.days:
         pieces.append(f"{value.days}d")
 
@@ -44,7 +43,4 @@ def human_readable_timedelta(seconds: int, precision: int = 0) -> str:
     if seconds > 0 or not pieces:
         pieces.append(f"{seconds}s")
 
-    if not precision:
-        return "".join(pieces)
-
-    return "".join(pieces[:precision])
+    return "".join(pieces[:precision]) if precision else "".join(pieces)

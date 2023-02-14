@@ -59,7 +59,7 @@ async def gen_ss(filepath, ts, opfilepath=None):
     # todo check the error pipe and do processing 
     source = filepath
     destination = os.path.dirname(source)
-    ss_name =  str(os.path.basename(source)) + "_" + str(round(time.time())) + ".jpg"
+    ss_name = f"{str(os.path.basename(source))}_{str(round(time.time()))}.jpg"
     ss_path = os.path.join(destination,ss_name)
 
     cmd = ["ffmpeg","-loglevel","error","-ss",str(ts),"-i",str(source),"-vframes","1","-q:v","2",str(ss_path)]
@@ -72,8 +72,8 @@ async def gen_ss(filepath, ts, opfilepath=None):
     spipe, epipe = await subpr.communicate()
     epipe = epipe.decode().strip()
     spipe = spipe.decode().strip()
-    renamelog.info("Stdout Pipe :- {}".format(spipe))
-    renamelog.info("Error Pipe :- {}".format(epipe))
+    renamelog.info(f"Stdout Pipe :- {spipe}")
+    renamelog.info(f"Error Pipe :- {epipe}")
 
     return ss_path
 
@@ -100,26 +100,13 @@ async def get_thumbnail(file_path, user_id = None, force_docs = False):
 
     if user_id is not None:
         user_thumb = UserDB().get_thumbnail(user_id)
-        if force_docs:
-            if user_thumb is not False:
-                return user_thumb
-            else:
-                return None
-        else:
-            if user_thumb is not False:
-                return user_thumb
-            else:
-                path = await gen_ss(file_path,random.randint(2,duration.seconds))
-                path = await resize_img(path,320)
-                return path
-
-    else:
-        if force_docs:
-            return None
-        
-        path = await gen_ss(file_path,random.randint(2,duration.seconds))
-        path = await resize_img(path,320)
-        return path
+        if user_thumb is not False:
+            return user_thumb
+    if force_docs:
+        return None
+    path = await gen_ss(file_path,random.randint(2,duration.seconds))
+    path = await resize_img(path,320)
+    return path
 
 async def handle_clr_thumb(client, msg):
     UserDB().set_thumbnail(None, msg.from_user.id)

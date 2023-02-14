@@ -19,13 +19,10 @@ class userin:
         start = time.time()
         val = None
 
-        while True:
-            if (time.time() - start) >= 20:
-                break
-            
+        while time.time() - start < 20:
             if len(self.track_users[e.from_user.id]) != 0:
                 msg_obj = self.track_users[e.from_user.id].pop(0)
-                
+
                 if msg_obj.text == "/ignore":
                     val = "ignore"
                     break
@@ -37,9 +34,9 @@ class userin:
                 else:
                     val = msg_obj.text
                     break
-            
+
             await asyncio.sleep(1)
-        
+
         if val is not None and del_msg:
             await msg_obj.delete()
 

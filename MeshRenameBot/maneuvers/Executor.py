@@ -16,10 +16,7 @@ class Executor():
         asyncio.get_event_loop().create_task(self.execute())
 
     async def execute(self) -> None:
-        while True:
-            if self._stop:
-                break
-            
+        while not self._stop:
             maneuver = await self.maneuvers_queue.get()
 
             if maneuver.is_canceled:
